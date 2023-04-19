@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Travel App Assessment
 
 This take-home assignment will allow you to showcase your abilities as a full-stack software engineer using the tools and environments you’re comfortable with. Our goal is to give you a view into a day in the life of an engineer at Abode; this assignment is very similar to work that our engineers do every day! There are a few required pieces of our tech stack that you’ll have to use, but outside of those, feel free to use any libraries and tools you would prefer.
@@ -95,3 +96,6 @@ Once you’ve finished, please add the following emails as Collaborators on your
 - evan@abodehr.com
 - jahziel@abodehr.com
 - steven@abodehr.com
+=======
+# abode-travel-takehome
+>>>>>>> b2253c8368d92768827c01b1441d1475234f061c
