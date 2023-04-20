@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import db, { createNewCity } from '../firebase/firebase';
-import { ref, onValue } from 'firebase/database';
-import { useSelector, useDispatch } from 'react-redux';
-import { setCities } from '../redux/slices/cities';
-import { toast } from 'react-toastify';
-import City from './City';
+import React, { useEffect, useState } from 'react'
 import {
     Grid,
     Button,
-    FormControl,
     CircularProgress,
+    FormControl,
     InputLabel,
     MenuItem,
     Select,
     Container
 } from '@mui/material'
-
+import db, { createNewCity } from '../firebase/firebase'
+import { ref, onValue } from 'firebase/database'
+import { useSelector, useDispatch } from 'react-redux'
+import { setCities } from '../redux/slices/cities'
+import City from './City'
+import { toast } from 'react-toastify'
 
 export default function Cities() {
     // Redux
     const dispatch = useDispatch();
+    const cities = useSelector(state => state.cities.value);
+    
+
     // Component State
     const [loading, setLoading] = useState(true)
     const [loadingNewCity, setLoadingNewCity] = useState(false)
-
 
     // Fetch cities from Firebase
     useEffect(() => {
@@ -37,8 +38,7 @@ export default function Cities() {
             saveCities(data)
             setLoading(false)
         })
-    }, [dispatch]);
-
+    }, [dispatch])
 
     // Create new city with Firebase Function
     const handleCreateCity = async () => {
@@ -74,32 +74,39 @@ export default function Cities() {
                         />
                     )}
                 </Button>
+
                 <FormControl variant='filled' sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id='demo-simple-select-standard-label'>Filter</InputLabel>
                     <Select
                         labelId='demo-simple-select-standard-label'
                         id='demo-simple-select-standard'
-                        label='Filter'>
+                        label='Filter'
+                    >
                         <MenuItem value={'All'}>All</MenuItem>
                         <MenuItem value={'Visited'}>Visited</MenuItem>
                         <MenuItem value={'Not Visited'}>Not Visited</MenuItem>
                     </Select>
                 </FormControl>
             </div>
-            <Grid container spacing={4} sx={{ marginTop: '0.5rem' }}>
-                {!loading ?
-                    <Grid item xs={12} sm={6} md={4} >
-                        <City />
-                    </Grid>
 
-                    :
+            <Grid container spacing={4} sx={{ marginTop: '0.5rem' }}>
+                {!loading ? (
+                    Object.keys(cities)
+                        .map((city, idx) => {
+                            return (
+                                <Grid item xs={12} sm={6} md={4} key={idx}>
+                                    <City city={city} cities={cities} />
+                                </Grid>
+                            )
+                        })
+                ) : (
                     <CircularProgress
                         sx={{
                             margin: 'auto',
                             marginTop: '6rem'
                         }}
                     />
-                }
+                )}
             </Grid>
         </Container>
     )
