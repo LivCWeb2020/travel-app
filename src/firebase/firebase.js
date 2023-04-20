@@ -33,4 +33,16 @@ export const createNewCity = async () => {
   }
 };
 
+export const updateCity = async (cities, city, visited) => {
+  try {
+    const res = await set(ref(db, 'cities/' + city), {
+      ...cities[city],
+      visited: !visited
+    })
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export default defaultInitOptions()
