@@ -17,11 +17,11 @@ import City from './City'
 import { toast } from 'react-toastify'
 
 export default function Cities() {
+    
     // Redux
     const dispatch = useDispatch();
     const cities = useSelector(state => state.cities.value);
     
-
     // Component State
     const [loading, setLoading] = useState(true)
     const [loadingNewCity, setLoadingNewCity] = useState(false)
@@ -74,8 +74,7 @@ export default function Cities() {
                         />
                     )}
                 </Button>
-
-                <FormControl variant='filled' sx={{ m: 1, minWidth: 120 }}>
+                <FormControl variant='filled'  sx={{ m: 1, minWidth: 120, marginLeft: '60rem'}}>
                     <InputLabel id='demo-simple-select-standard-label'>Filter</InputLabel>
                     <Select
                         labelId='demo-simple-select-standard-label'
@@ -88,7 +87,6 @@ export default function Cities() {
                     </Select>
                 </FormControl>
             </div>
-
             <Grid container spacing={4} sx={{ marginTop: '0.5rem' }}>
                 {!loading ? (
                     Object.keys(cities)
