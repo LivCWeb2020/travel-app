@@ -1,16 +1,25 @@
-import React from 'react'
+import React from 'react';
 import {
   Card,
   CardMedia,
   CardContent,
   Checkbox,
   FormControlLabel
-} from '@mui/material'
+} from '@mui/material';
+import { toast } from 'react-toastify';
+import { updateCity } from '../firebase/firebase'
 
 export default function City ({ city, cities }) {
   // Update city visited status on Firebase
-  const handleUpdateCity = async () => {
-    console.log('update city')
+  const handleUpdateCity = async (city, visited) => {
+    await updateCity(cities, city, visited)
+    // Show toast notification
+    toast(
+      `${cities[city].name} updated to ${!visited ? 'visited' : 'tot-visited'}`,
+      {
+        type: 'success'
+      }
+    )
   }
 
   return (
@@ -39,8 +48,7 @@ export default function City ({ city, cities }) {
           control={
             <Checkbox
               checked={cities[city].visited}
-              onChange={() => handleUpdateCity()}
-              inputProps={{ 'aria-label': 'visited' }}
+              onChange={() => handleUpdateCity(city, cities[city].visited)}
             />
           }
           label='Visited'
