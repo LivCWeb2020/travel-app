@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import db, { createNewCity } from '../firebase/firebase';
+import { ref, onValue } from 'firebase/database';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCities } from '../redux/slices/cities';
+import { toast } from 'react-toastify';
 import City from './City';
 import {
   Grid,
@@ -13,14 +18,31 @@ import {
 
 export default function Cities () {
   // Redux
- 
+  const dispatch = useDispatch();
   // Component State
 
 
   // Fetch cities from Firebase
+  useEffect(() => {
+    const citiesRef = ref(db, 'cities')
+    onValue(citiesRef, snapshot => {
+      const saveCities = cities => {
+        dispatch(setCities(cities))
+      }
+      const data = snapshot.val()
+      saveCities(data)
+    })
+  }, [dispatch]);
 
 
   // Create new city with Firebase Function
+  const handleCreateCity = async () => {
+    await createNewCity()
+    // Show toast notification
+    toast('New city created!', {
+      type: 'success'
+    })
+  };
 
   return (
     <Container
@@ -32,6 +54,7 @@ export default function Cities () {
       <div className='flex justify-between'>
         <Button
           variant='contained'
+          onClick={() => handleCreateCity()}
           disabled={false}
         >
           Create New City
