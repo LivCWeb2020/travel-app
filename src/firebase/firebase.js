@@ -1,8 +1,8 @@
-import { initializeApp } from 'firebase/app'
-import { getDatabase } from 'firebase/database'
-import axios from 'axios'
-import { ref, set } from 'firebase/database'
-import db from '../firebase/firebase'
+import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database';
+import axios from 'axios';
+import { ref, set } from 'firebase/database';
+import db from '../firebase/firebase';
 
 function defaultInitOptions () {
   const firebaseConfig = {
@@ -13,7 +13,7 @@ function defaultInitOptions () {
     storageBucket: 'travel-takehome.appspot.com',
     messagingSenderId: '732846040377',
     appId: '1:732846040377:web:0913b7d3922a9c782874e8'
-  }
+  };
 
   const app = initializeApp(firebaseConfig)
   const db = getDatabase(app)
@@ -31,5 +31,18 @@ export const createNewCity = async () => {
   } catch (error) {
     console.log(error)
   }
+};
+
+export const updateCity = async (cities, city, visited) => {
+  try {
+    const res = await set(ref(db, 'cities/' + city), {
+      ...cities[city],
+      visited: !visited
+    })
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
 }
+
 export default defaultInitOptions()
