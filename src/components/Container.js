@@ -1,5 +1,4 @@
 import React from 'react';
-import NavDrawer from './Drawer';
 import {
   ThemeProvider,
   CssBaseline,
@@ -7,12 +6,33 @@ import {
   FormControlLabel,
   Switch
 } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppBar, Toolbar } from '@mui/material';
+import Drawer from './Drawer';
+import { toggleTheme } from '../redux/slices/ui';
+import { DarkMode, LightMode } from '@mui/icons-material';
 
 const Container = ({ children }) => {
+  const dispatch = useDispatch();
+  const themeMode = useSelector(state => state.ui.value);
+  const theme = createTheme({
+
+    palette: {
+      mode: themeMode,
+      primary: {
+        main: '#085879'
+      },
+      secondary: {
+        main: '#ffffff'
+      },
+      typography: {
+        fontFamily: ['Open Sans, Montserrat', 'sans-serif'].join(',')
+      }
+    }
+  })
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <AppBar
         color='primary'
@@ -31,11 +51,23 @@ const Container = ({ children }) => {
         >
           <h3>Cities of the World</h3>
           <div>
-            <NavDrawer />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={themeMode === 'dark' ? true : false}
+                  onChange={() => {
+                    dispatch(toggleTheme())
+                  }}
+                />
+              }
+              label={themeMode === 'dark' ? <DarkMode /> : <LightMode />}
+            />
+            <Drawer />
           </div>
         </Toolbar>
       </AppBar>
-    </>
+      {children}
+    </ThemeProvider>
   )
 }
 
