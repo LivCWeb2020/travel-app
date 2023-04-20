@@ -20,7 +20,7 @@ export default function City ({ city, cities }) {
         type: 'success'
       }
     )
-  }
+  };
 
   return (
     <Card sx={{ maxWidth: 345 }}>

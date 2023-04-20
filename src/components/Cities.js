@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
     Grid,
     Button,
@@ -8,23 +8,24 @@ import {
     MenuItem,
     Select,
     Container
-} from '@mui/material'
-import db, { createNewCity } from '../firebase/firebase'
-import { ref, onValue } from 'firebase/database'
-import { useSelector, useDispatch } from 'react-redux'
-import { setCities } from '../redux/slices/cities'
-import City from './City'
-import { toast } from 'react-toastify'
+} from '@mui/material';
+import db, { createNewCity } from '../firebase/firebase';
+import { ref, onValue } from 'firebase/database';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCities } from '../redux/slices/cities';
+import City from './City';
+import { toast } from 'react-toastify';
 
 export default function Cities() {
-    
+
     // Redux
     const dispatch = useDispatch();
     const cities = useSelector(state => state.cities.value);
-    
+
     // Component State
-    const [loading, setLoading] = useState(true)
-    const [loadingNewCity, setLoadingNewCity] = useState(false)
+    const [loading, setLoading] = useState(true);
+    const [loadingNewCity, setLoadingNewCity] = useState(false);
+    const [filter, setFilter] = useState('All');
 
     // Fetch cities from Firebase
     useEffect(() => {
@@ -38,7 +39,7 @@ export default function Cities() {
             saveCities(data)
             setLoading(false)
         })
-    }, [dispatch])
+    }, [dispatch]);
 
     // Create new city with Firebase Function
     const handleCreateCity = async () => {
@@ -49,7 +50,7 @@ export default function Cities() {
             type: 'success'
         })
         setLoadingNewCity(false)
-    }
+    };
 
     return (
         <Container
@@ -60,6 +61,7 @@ export default function Cities() {
         >
             <div className='flex justify-between'>
                 <Button
+                    sx={{ marginTop: '5rem'}}
                     variant='contained'
                     onClick={() => handleCreateCity()}
                     disabled={loadingNewCity}
@@ -74,11 +76,15 @@ export default function Cities() {
                         />
                     )}
                 </Button>
-                <FormControl variant='filled'  sx={{ m: 1, minWidth: 120, marginLeft: '60rem'}}>
-                    <InputLabel id='demo-simple-select-standard-label'>Filter</InputLabel>
+                <FormControl variant='filled' sx={{ m: 1, minWidth: 120, marginLeft: '60rem' }}>
+                    <InputLabel id='filter-label'>Filter</InputLabel>
                     <Select
-                        labelId='demo-simple-select-standard-label'
-                        id='demo-simple-select-standard'
+                        labelId='filter-label'
+                        id='filter'
+                        value={filter}
+                        onChange={e => {
+                            setFilter(e.target.value)
+                        }}
                         label='Filter'
                     >
                         <MenuItem value={'All'}>All</MenuItem>
@@ -90,9 +96,16 @@ export default function Cities() {
             <Grid container spacing={4} sx={{ marginTop: '0.5rem' }}>
                 {!loading ? (
                     Object.keys(cities)
-                        .map((city, idx) => {
+                        .filter(
+                            // Filter by visited or not visited
+                            key =>
+                                filter === 'All' ||
+                                (filter === 'Visited' && cities[key].visited) ||
+                                (filter === 'Not Visited' && !cities[key].visited)
+                        )
+                        .map((city, index) => {
                             return (
-                                <Grid item xs={12} sm={6} md={4} key={idx}>
+                                <Grid item xs={12} sm={6} md={4} key={index}>
                                     <City city={city} cities={cities} />
                                 </Grid>
                             )

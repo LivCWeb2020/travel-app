@@ -55,7 +55,7 @@ export default function NavDrawer () {
                 fontSize: '20px'
               }}
             />
-            Wow.. So empty..
+            empty inside
           </ListItem>
         </List>
       </Drawer>
