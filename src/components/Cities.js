@@ -6,79 +6,101 @@ import { setCities } from '../redux/slices/cities';
 import { toast } from 'react-toastify';
 import City from './City';
 import {
-  Grid,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Container
+    Grid,
+    Button,
+    FormControl,
+    CircularProgress,
+    InputLabel,
+    MenuItem,
+    Select,
+    Container
 } from '@mui/material'
 
 
-export default function Cities () {
-  // Redux
-  const dispatch = useDispatch();
-  // Component State
+export default function Cities() {
+    // Redux
+    const dispatch = useDispatch();
+    // Component State
+    const [loading, setLoading] = useState(true)
+    const [loadingNewCity, setLoadingNewCity] = useState(false)
 
 
-  // Fetch cities from Firebase
-  useEffect(() => {
-    const citiesRef = ref(db, 'cities')
-    onValue(citiesRef, snapshot => {
-      const saveCities = cities => {
-        dispatch(setCities(cities))
-      }
-      const data = snapshot.val()
-      saveCities(data)
-    })
-  }, [dispatch]);
+    // Fetch cities from Firebase
+    useEffect(() => {
+        setLoading(true)
+        const citiesRef = ref(db, 'cities')
+        onValue(citiesRef, snapshot => {
+            const saveCities = cities => {
+                dispatch(setCities(cities))
+            }
+            const data = snapshot.val()
+            saveCities(data)
+            setLoading(false)
+        })
+    }, [dispatch]);
 
 
-  // Create new city with Firebase Function
-  const handleCreateCity = async () => {
-    await createNewCity()
-    // Show toast notification
-    toast('New city created!', {
-      type: 'success'
-    })
-  };
+    // Create new city with Firebase Function
+    const handleCreateCity = async () => {
+        setLoadingNewCity(true)
+        await createNewCity()
+        // Show toast notification
+        toast('New city created!', {
+            type: 'success'
+        })
+        setLoadingNewCity(false)
+    }
 
-  return (
-    <Container
-      sx={{
-        marginTop: '100px',
-        marginBottom: '60px'
-      }}
-    >
-      <div className='flex justify-between'>
-        <Button
-          variant='contained'
-          onClick={() => handleCreateCity()}
-          disabled={false}
+    return (
+        <Container
+            sx={{
+                marginTop: '100px',
+                marginBottom: '60px'
+            }}
         >
-          Create New City
-        </Button>
-        <FormControl variant='filled' sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id='demo-simple-select-standard-label'>Filter</InputLabel>
-          <Select
-            labelId='demo-simple-select-standard-label'
-            id='demo-simple-select-standard'
-            label='Filter'>
-            <MenuItem value={'All'}>All</MenuItem>
-            <MenuItem value={'Visited'}>Visited</MenuItem>
-            <MenuItem value={'Not Visited'}>Not Visited</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-      <Grid container spacing={4} sx={{ marginTop: '0.5rem' }}>
-        <Grid>
-            <City />
-            <City />
-            <City />
-            <City />
-        </Grid>
-      </Grid>
-    </Container>
-  )
+            <div className='flex justify-between'>
+                <Button
+                    variant='contained'
+                    onClick={() => handleCreateCity()}
+                    disabled={loadingNewCity}
+                >
+                    Create New City
+                    {loadingNewCity && (
+                        <CircularProgress
+                            size={20}
+                            sx={{
+                                marginLeft: '1rem'
+                            }}
+                        />
+                    )}
+                </Button>
+                <FormControl variant='filled' sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id='demo-simple-select-standard-label'>Filter</InputLabel>
+                    <Select
+                        labelId='demo-simple-select-standard-label'
+                        id='demo-simple-select-standard'
+                        label='Filter'>
+                        <MenuItem value={'All'}>All</MenuItem>
+                        <MenuItem value={'Visited'}>Visited</MenuItem>
+                        <MenuItem value={'Not Visited'}>Not Visited</MenuItem>
+                    </Select>
+                </FormControl>
+            </div>
+            <Grid container spacing={4} sx={{ marginTop: '0.5rem' }}>
+                {!loading ?
+                    <Grid item xs={12} sm={6} md={4} >
+                        <City />
+                    </Grid>
+
+                    :
+                    <CircularProgress
+                        sx={{
+                            margin: 'auto',
+                            marginTop: '6rem'
+                        }}
+                    />
+                }
+            </Grid>
+        </Container>
+    )
 }
