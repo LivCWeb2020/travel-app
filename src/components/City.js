@@ -18,6 +18,8 @@ export default function City ({ city, cities }) {
       <CardMedia
         component='img'
         height='194'
+        image={cities[city].image}
+        alt={cities[city].name}
       />
       <CardContent
         sx={{
@@ -28,13 +30,15 @@ export default function City ({ city, cities }) {
         }}
       >
         <div>
-          <h3 className='text-xl font-bold  '>city</h3>
-          <p className='text-sm '>country</p>
+          <h3 className='text-xl font-bold  '>{cities[city].name}</h3>
+          <p className='text-sm '>{cities[city].country}</p>
         </div>
+
         <FormControlLabel
           labelPlacement='end'
           control={
             <Checkbox
+              checked={cities[city].visited}
               onChange={() => handleUpdateCity()}
               inputProps={{ 'aria-label': 'visited' }}
             />
