@@ -1,12 +1,13 @@
-import React from 'react'
+import React from 'react';
+import NavDrawer from './Drawer';
 import {
   ThemeProvider,
   CssBaseline,
   createTheme,
   FormControlLabel,
   Switch
-} from '@mui/material'
-import { AppBar, Toolbar } from '@mui/material'
+} from '@mui/material';
+import { AppBar, Toolbar } from '@mui/material';
 
 const Container = ({ children }) => {
 
@@ -29,10 +30,13 @@ const Container = ({ children }) => {
           }}
         >
           <h3>Cities of the World</h3>
+          <div>
+            <NavDrawer />
+          </div>
         </Toolbar>
       </AppBar>
     </>
   )
 }
 
-export default Container
+export default Container;
