@@ -103,6 +103,7 @@ export default function Cities() {
                                 (filter === 'Visited' && cities[key].visited) ||
                                 (filter === 'Not Visited' && !cities[key].visited)
                         )
+                        .reverse()
                         .map((city, index) => {
                             return (
                                 <Grid item xs={12} sm={6} md={4} key={index}>
